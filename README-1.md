@@ -1,7 +1,7 @@
-Fact Table
+## Fact Table
 The fact table is the table that contains the measures or metrics we want to analyze. In this case, the taxi_trips table contains the details about the trips, so we can use it as the fact table.
 
-Dimension Tables
+## Dimension Tables
 The dimension tables contain the descriptive attributes that provide context to the fact table. In this case, we can identify the following dimension tables:
 
 - dim_time: This table contains information about the date and time of the trip, such as the day of the week, the hour of the day, and the month.
@@ -9,10 +9,10 @@ The dimension tables contain the descriptive attributes that provide context to 
 - dim_taxi: This table contains information about the taxi, such as the taxi ID, the taxi company, and the taxi type.
 - dim_payment: This table contains information about the payment method, such as the payment type and the tip amount.
 
-Dimensional Model
+## Dimensional Model
 With the fact and dimension tables identified, we can create the following dimensional model:
 
-fact_taxi_trips Table
+### fact_taxi_trips Table
 This table contains the measures or metrics we want to analyze, such as the trip distance, the trip time, and the fare amount.
 
 Column | Name	Data | Type	| Description
@@ -32,7 +32,7 @@ tolls	| FLOAT	| | Total tolls amount
 extras	| FLOAT	| | Total extras amount
 trip_total	| FLOAT	| | Total trip amount
 
-dim_location Table
+### dim_location Table
 This table contains information about the pickup and dropoff locations of the trip.
 
 Column | Name	| Data Type	| Description
@@ -45,7 +45,7 @@ census_block	| STRING	| | Census block number
 latitude	| FLOAT	| | Latitude coordinate of the location
 longitude	| FLOAT	| | Longitude coordinate of the location
 
-dim_time Table
+### dim_time Table
 This table contains information about the date and time of the trip.
 
 Column | Name	| Data Type	| Description
