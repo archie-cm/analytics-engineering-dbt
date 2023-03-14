@@ -14,8 +14,8 @@ With the fact and dimension tables identified, we can create the following dimen
 fact_taxi_trips Table
 This table contains the measures or metrics we want to analyze, such as the trip distance, the trip time, and the fare amount.
 
-Column Name	Data Type	Description
-trip_id	STRING	Unique identifier for each trip
+Column | Name	Data | Type	| Description
+trip_id	| STRING |	Unique | identifier for each trip
 pickup_location_id	INTEGER	Foreign key to the dim_location table for the pickup location
 dropoff_location_id	INTEGER	Foreign key to the dim_location table for the dropoff location
 taxi_id	INTEGER	Foreign key to the dim_taxi table for the taxi
