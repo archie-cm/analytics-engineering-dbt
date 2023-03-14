@@ -34,23 +34,24 @@ trip_total	| FLOAT	| | Total trip amount
 dim_location Table
 This table contains information about the pickup and dropoff locations of the trip.
 
-Column Name	Data Type	Description
-location_id	INTEGER	Unique identifier for each location
-community_area	INTEGER	Community area number
-community_area_name	STRING	Community area name
-census_tract	INTEGER	Census tract number
-census_block	STRING	Census block number
-latitude	FLOAT	Latitude coordinate of the location
-longitude	FLOAT	Longitude coordinate of the location
+Column | Name	| Data Type	| Description
+location_id	| INTEGER	| Unique | identifier for each location
+community_area	| INTEGER	| | Community area number
+community_area_name	| STRING | | Community area name
+census_tract	| INTEGER | | Census tract number
+census_block	| STRING	| | Census block number
+latitude	| FLOAT	| | Latitude coordinate of the location
+longitude	| FLOAT	| | Longitude coordinate of the location
+
 dim_time Table
 This table contains information about the date and time of the trip.
 
-Column Name	Data Type	Description
-time_id	INTEGER	Unique identifier for each time
-trip_start_timestamp	TIMESTAMP	Start time of the trip
-trip_end_timestamp	TIMESTAMP	End time of the trip
-year	INTEGER	Year of the trip
-quarter	INTEGER	Quarter of the year
-month	INTEGER	Month of the year
-day_of_month	INTEGER	Day of the month
-day_of_week	INTEGER	Day of the week (1 = Monday,
+Column | Name	| Data Type	| Description
+time_id	| INTEGER	| Unique | identifier for each time
+trip_start_timestamp	| TIMESTAMP	| | Start time of the trip
+trip_end_timestamp	| TIMESTAMP	| | End time of the trip
+year	| INTEGER	| | Year of the trip
+quarter | INTEGER	| | Quarter of the year
+month	| INTEGER	| | Month of the year
+day_of_month	| INTEGER	| | Day of the month
+day_of_week	| INTEGER	| | Day of the week (1 = Monday,
