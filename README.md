@@ -10,24 +10,30 @@ dbt (data build tool) is a data `transformation` tool that uses select `SQL` sta
 
 ### Sources
 ```
+version: 2
+
 sources:
-    - name: staginglayer
-      database: datafellowship-370013
-      schema: rawdata
+    - name: staging
       tables:
         - name: yellowtrip_data
+
+models:
+  - name: stg_table
+    description: staging layer for yellowtrip data warehouses
 ```
 ```sql
+{{ config(materialized='view') }}
+
 select
-    {{ dbt_utils.surrogate_key(['vendorid', 'tpep_pickup_datetime']) }} as tripid,
+    {{ dbt_utils.surrogate_key(['unique_key']) }} as tripid,
     *
-from {{ source('staginglayer','yellowtrip_data') }}
+from {{ source('staging','yellowtrip_data') }}
 ```
 ### References
 ```sql
 select distinct
-    payment_type as payment_id,
-from {{ ref('stg_trip') }}
+    payment_type,
+from {{ ref('stg_table') }}
 ```
 Models must use `source` and `ref`  for lineage to be accessible
 
@@ -35,18 +41,13 @@ Models must use `source` and `ref`  for lineage to be accessible
 A user-defined `description`. Can be used to document a model, sources, seeds, snapshot, analyses, and macros. Allowing for a detailed definition.
 ```
 models:
-  - name: fact_trip
-    description: "{{ doc('fact_trip') }}" #reference docs block
+  - name: taxi_trip_fact
+    description: "fact table"
     columns:
       - name: tripid
-        description: "Fact table primary key" #standard description
+        description: "Fact table primary key" 
 ```        
-You can store `descriptions` in a markdown file and reference with {{ doc('fact_trip') }}, which references this markdown file:
-```
-{% docs fact_trip %}
-The yellow taxi trip records include fields capturing pick-up and drop-off dates/times, pick-up and drop-off locations, trip distances, itemized fares, rate types, payment types, and driver-reported passenger counts. The data used in the attached datasets were collected and provided to the NYC Taxi and Limousine Commission (TLC) by technology providers authorized under the Taxicab & Livery Passenger Enhancement Programs (TPEP/LPEP).
-{% enddocs %}
-```
+
 ## Fact Table
 The fact table is the table that contains the measures or metrics we want to analyze. In this case, the taxi_trips table contains the details about the trips, so we can use it as the fact table.
 
@@ -54,9 +55,82 @@ The fact table is the table that contains the measures or metrics we want to ana
 The dimension tables contain the descriptive attributes that provide context to the fact table. In this case, we can identify the following dimension tables:
 
 - dim_time: This table contains information about the date and time of the trip, such as the day of the week, the hour of the day, and the month.
+```
+WITH time_data AS (
+  SELECT
+    DISTINCT
+    EXTRACT(DATE FROM trip_start_timestamp) AS trip_date,
+    EXTRACT(HOUR FROM trip_start_timestamp) AS trip_hour,
+    EXTRACT(DAYOFWEEK FROM trip_start_timestamp) AS day_of_week,
+    EXTRACT(MONTH FROM trip_start_timestamp) AS month,
+    EXTRACT(YEAR FROM trip_start_timestamp) AS year
+  FROM
+    {{ ref('stg_table') }}
+)
+
+SELECT
+  trip_date,
+  trip_hour,
+  day_of_week,
+  month,
+  year
+FROM
+  time_data
+```
+
 - dim_location: This table contains information about the pickup and dropoff locations of the trip, such as the neighborhood, the community area, and the latitude and longitude coordinates.
+```
+WITH cte as (
+select
+  distinct
+  pickup_census_tract as location_id,
+  pickup_community_area as community_area,
+  pickup_latitude as latitude,
+  pickup_longitude as longitude
+from
+  {{ ref('stg_table') }}
+
+union distinct
+
+select
+  distinct
+  dropoff_census_tract as location_id,
+  dropoff_community_area as community_area,
+  dropoff_latitude as latitude,
+  dropoff_longitude as longitude
+from
+  {{ ref('stg_table') }}
+)
+
+SELECT * FROM cte WHERE location_id is NOT NULL
+```
+
 - dim_taxi: This table contains information about the taxi, such as the taxi ID, the taxi company, and the taxi type.
+```
+SELECT
+  taxi_id,
+  company
+FROM 
+    {{ ref('stg_table') }}
+```
+
 - dim_payment: This table contains information about the payment method, such as the payment type and the tip amount.
+```
+SELECT
+  payment_type,
+  tips
+FROM (
+  SELECT
+    payment_type,
+    AVG(tips) AS tips
+  FROM
+    {{ ref('stg_table') }}
+  GROUP BY
+    payment_type
+)
+WHERE payment_type IS NOT NULL
+```
+
 
 ## Dimensional Model
 With the fact and dimension tables identified, we can create the following dimensional model:
@@ -109,7 +183,6 @@ day_of_month	| INTEGER	| | Day of the month
 day_of_week	| INTEGER	| | Day of the week (1 = Monday,
 
 
-
 ### Tests
 Testing with singular and generic tests to check every value stored.
   + `not_null`: verify that every value in a column (e.g. payment_id) contains unique values
@@ -141,32 +214,6 @@ Testing with singular and generic tests to check every value stored.
             values: ['Credit card', 'Cash', 'No charge', 'Dispute', 'Unknown', 'Voided trip']
  ```
 
-### Jinja & Macros
-Macros in Jinja are pieces of code that can be reused multiple times – they are analogous to `functions` in other programming languages
-```
- {#
-    This macro returns the description of the payment_type 
-#}
-
-{% macro payment_type(payment_type) -%}
-
-    case {{ payment_type }}
-        when 1 then 'Credit card'
-        when 2 then 'Cash'
-        when 3 then 'No charge'
-        when 4 then 'Dispute'
-        when 5 then 'Unknown'
-        when 6 then 'Voided trip'
-    end
-
-{%- endmacro %}
-```
-```sql
-select distinct
-    payment_type as payment_id,
-    {{ payment_type('payment_type') }} as payment_type_description
-```
-
 ### Relevant Commands
 - run `dbt run`
 - run `dbt test`
@@ -174,4 +221,4 @@ select distinct
 - run `dbt docs serve`
 
 ## DAG (Lineage)
-![image](https://user-images.githubusercontent.com/85284506/206355285-be2ed9ad-21ce-40c2-a0b0-3e3f5ef532ba.png)
+![image](https://user-images.githubusercontent.com/108534539/225040741-a512dd58-a7d9-42a4-9e32-dc07113d04b8.png)
