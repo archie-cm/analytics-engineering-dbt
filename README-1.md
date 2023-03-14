@@ -35,6 +35,7 @@ dim_location Table
 This table contains information about the pickup and dropoff locations of the trip.
 
 Column | Name	| Data Type	| Description
+| --- | --- | --- | --- |
 location_id	| INTEGER	| Unique | identifier for each location
 community_area	| INTEGER	| | Community area number
 community_area_name	| STRING | | Community area name
@@ -47,6 +48,7 @@ dim_time Table
 This table contains information about the date and time of the trip.
 
 Column | Name	| Data Type	| Description
+| --- | --- | --- | --- |
 time_id	| INTEGER	| Unique | identifier for each time
 trip_start_timestamp	| TIMESTAMP	| | Start time of the trip
 trip_end_timestamp	| TIMESTAMP	| | End time of the trip
