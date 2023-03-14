@@ -17,19 +17,20 @@ This table contains the measures or metrics we want to analyze, such as the trip
 Column | Name	Data | Type	| Description
 | --- | --- | --- | --- |
 trip_id	| STRING |	Unique | identifier for each trip
-pickup_location_id	INTEGER	Foreign key to the dim_location table for the pickup location
-dropoff_location_id	INTEGER	Foreign key to the dim_location table for the dropoff location
-taxi_id	INTEGER	Foreign key to the dim_taxi table for the taxi
-payment_id	INTEGER	Foreign key to the dim_payment table for the payment method
-trip_start_timestamp	TIMESTAMP	Start time of the trip
-trip_end_timestamp	TIMESTAMP	End time of the trip
-trip_seconds	INTEGER	Trip duration in seconds
-trip_miles	FLOAT	Trip distance in miles
-fare	FLOAT	Total fare amount
-tips	FLOAT	Total tip amount
-tolls	FLOAT	Total tolls amount
-extras	FLOAT	Total extras amount
-trip_total	FLOAT	Total trip amount
+pickup_location_id	| INTEGER	| Foreign key | to the dim_location table for the pickup location
+dropoff_location_id	| INTEGER	| Foreign key | to the dim_location table for the dropoff location
+taxi_id	| INTEGER	| Foreign key | to the dim_taxi table for the taxi
+payment_id	| INTEGER	| Foreign key | to the dim_payment table for the payment method
+trip_start_timestamp	| TIMESTAMP	| | Start time of the trip
+trip_end_timestamp	| TIMESTAMP | | End time of the trip
+trip_seconds	| INTEGER	| | Trip duration in seconds
+trip_miles	| FLOAT | 	| Trip distance in miles
+fare	| FLOAT	| | Total fare amount
+tips	| FLOAT	| | Total tip amount
+tolls	| FLOAT	| | Total tolls amount
+extras	| FLOAT	| | Total extras amount
+trip_total	| FLOAT	| | Total trip amount
+
 dim_location Table
 This table contains information about the pickup and dropoff locations of the trip.
 
