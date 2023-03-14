@@ -4,10 +4,11 @@ The fact table is the table that contains the measures or metrics we want to ana
 Dimension Tables
 The dimension tables contain the descriptive attributes that provide context to the fact table. In this case, we can identify the following dimension tables:
 
-dim_time: This table contains information about the date and time of the trip, such as the day of the week, the hour of the day, and the month.
-dim_location: This table contains information about the pickup and dropoff locations of the trip, such as the neighborhood, the community area, and the latitude and longitude coordinates.
-dim_taxi: This table contains information about the taxi, such as the taxi ID, the taxi company, and the taxi type.
-dim_payment: This table contains information about the payment method, such as the payment type and the tip amount.
+- dim_time: This table contains information about the date and time of the trip, such as the day of the week, the hour of the day, and the month.
+- dim_location: This table contains information about the pickup and dropoff locations of the trip, such as the neighborhood, the community area, and the latitude and longitude coordinates.
+- dim_taxi: This table contains information about the taxi, such as the taxi ID, the taxi company, and the taxi type.
+- dim_payment: This table contains information about the payment method, such as the payment type and the tip amount.
+
 Dimensional Model
 With the fact and dimension tables identified, we can create the following dimensional model:
 
